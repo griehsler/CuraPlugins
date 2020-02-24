@@ -27,7 +27,7 @@ class RampFan(Script):
                     "label": "Fan start at",
                     "description": "Minimum useful fan speed (some fans don't really start spinning below a certain power level)",
                     "unit" : "%",
-                    "type": "float",
+                    "type": "int",
                     "default_value": "10",
                     "minimum_value": "0",
                     "maximum_value": "100"
@@ -36,7 +36,7 @@ class RampFan(Script):
                     "label": "Fan target",
                     "description": "Fan speed to ramp up to",
                     "unit" : "%",
-                    "type": "float",
+                    "type": "int",
                     "default_value": "100",
                     "minimum_value": "0",
                     "maximum_value": "100"
@@ -45,7 +45,7 @@ class RampFan(Script):
                     "label": "Fan step size",
                     "description": "Allowed increases of fan speed",
                     "unit" : "%",
-                    "type": "float",
+                    "type": "int",
                     "default_value": "5",
                     "minimum_value": "1",
                     "maximum_value": "100"
@@ -74,10 +74,10 @@ class RampFan(Script):
         extrusion_length_abs = -1
         extrusion_length_rel = 0
 
-        target_extrusion_length = self.getSettingValueByKey("target_extrusion_length")
-        fan_start = self.getSettingValueByKey("fan_start") * 255 / 100
-        fan_target = self.getSettingValueByKey("fan_target") * 255 / 100
-        fan_stepsize = self.getSettingValueByKey("fan_stepsize") * 255 / 100
+        target_extrusion_length = int(self.getSettingValueByKey("target_extrusion_length"))
+        fan_start = int(self.getSettingValueByKey("fan_start")) * 2.55
+        fan_target = int(self.getSettingValueByKey("fan_target")) * 2.55
+        fan_stepsize = int(self.getSettingValueByKey("fan_stepsize")) * 2.55
         mode = self.getSettingValueByKey("mode")
 
         for layer in data:
@@ -135,7 +135,6 @@ def get_fan_value(x, mode):
     if mode == "sigmoid":
         y = math.atan(x*5-2.45)/2.35 + 0.5
     else:
-        # linear mode
         y = x
     
     # trim the result down to 0 <= y <= 1
