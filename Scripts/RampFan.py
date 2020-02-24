@@ -83,15 +83,20 @@ class RampFan(Script):
         for layer in data:
             output_layer = ""
             for line in layer.split("\n"):
-                if not started and "LAYER:1" in line:
-                    started = True
-
+    
                 if "M106" in line:
                     output_layer += "; disabled by fan ramping ;"
 
                 # always output the current line
                 output_layer += "%s\n" % line
 
+                if not started and "LAYER:1" in line:
+                    started = True
+                    current_fan = fan_start
+                    if current_fan > 0:
+                        output_layer += "%s\n" % get_fan_command(current_fan)
+
+   
                 if line.startswith(";") or not started or finished:
                     continue
 
@@ -104,16 +109,12 @@ class RampFan(Script):
                     if extrusion_length_abs == -1:
                         # first E value ever -> start position
                         extrusion_length_abs = new_e
-                        current_fan = fan_start
-                        if current_fan > 0:
-                            output_layer += "%s\n" % get_fan_command(current_fan)
                     else:
                         movement = new_e - extrusion_length_abs
                         if movement > 0: # ignore retractions
                             extrusion_length_abs = new_e
                             extrusion_length_rel += movement
                             length_progress = extrusion_length_rel / target_extrusion_length
-                            previous_fan = current_fan
                             new_fan = get_fan_value(length_progress, mode) * fan_target
                             if (new_fan > current_fan and (new_fan == fan_target or new_fan - current_fan > fan_stepsize)):
                                 current_fan = new_fan
@@ -129,7 +130,7 @@ class RampFan(Script):
 
 
 def get_fan_command(rate):
-    return "M106 S%d ; fan ramping\n" % round(rate)
+    return "M106 S%d ; fan ramping" % round(rate)
 
 def get_fan_value(x, mode):
     if mode == "sigmoid":
