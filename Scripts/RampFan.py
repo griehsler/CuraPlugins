@@ -20,35 +20,35 @@ class RampFan(Script):
                     "description": "The extrusion length at which the final fan speed should be reached",
                     "unit": "mm",
                     "type": "int",
-                    "minimum_value": "0",
-                    "default_value": "100"
+                    "minimum_value": 0,
+                    "default_value": 100
                 },
                 "fan_start": {
                     "label": "Fan start at",
                     "description": "Minimum useful fan speed (some fans don't really start spinning below a certain power level)",
                     "unit" : "%",
                     "type": "int",
-                    "default_value": "10",
-                    "minimum_value": "0",
-                    "maximum_value": "100"
+                    "default_value": 10,
+                    "minimum_value": 0,
+                    "maximum_value": 100
                 },
                 "fan_target": {
                     "label": "Fan target",
                     "description": "Fan speed to ramp up to",
                     "unit" : "%",
                     "type": "int",
-                    "default_value": "100",
-                    "minimum_value": "0",
-                    "maximum_value": "100"
+                    "default_value": 100,
+                    "minimum_value": 0,
+                    "maximum_value": 100
                 },
                 "fan_stepsize": {
                     "label": "Fan step size",
                     "description": "Allowed increases of fan speed",
                     "unit" : "%",
                     "type": "int",
-                    "default_value": "5",
-                    "minimum_value": "1",
-                    "maximum_value": "100"
+                    "default_value": 5,
+                    "minimum_value": 1,
+                    "maximum_value": 100
                 },
                 "mode": {
                     "label": "Ramp mode",
@@ -74,10 +74,10 @@ class RampFan(Script):
         extrusion_length_abs = -1
         extrusion_length_rel = 0
 
-        target_extrusion_length = int(self.getSettingValueByKey("target_extrusion_length"))
-        fan_start = int(self.getSettingValueByKey("fan_start")) * 2.55
-        fan_target = int(self.getSettingValueByKey("fan_target")) * 2.55
-        fan_stepsize = int(self.getSettingValueByKey("fan_stepsize")) * 2.55
+        target_extrusion_length = self.getSettingValueByKey("target_extrusion_length")
+        fan_start = self.getSettingValueByKey("fan_start") * 2.55
+        fan_target = self.getSettingValueByKey("fan_target") * 2.55
+        fan_stepsize = self.getSettingValueByKey("fan_stepsize") * 2.55
         mode = self.getSettingValueByKey("mode")
 
         for layer in data:
